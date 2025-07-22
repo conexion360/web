@@ -1,0 +1,83 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+:root {
+  --primary-dark: #031c3b;
+  --primary: #052752;
+  --primary-light: #0a3d7a;
+  --secondary: #10CDD0;
+  
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: var(--primary);
+}
+
+section {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  @apply bg-secondary hover:bg-secondary-light text-primary font-bold py-3 px-6 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden;
+}
+
+.btn-outline {
+  @apply border-2 border-secondary text-white hover:bg-secondary hover:text-primary font-bold py-3 px-6 rounded-md transition-all duration-300 transform hover:scale-105 hover:shadow-lg relative overflow-hidden;
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reveal-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+#app {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
+}
+
+/* Mobile adjustments for hero section */
+@media (max-width: 640px) {
+  .mobile-min-height {
+    min-height: 100vh;
+    padding-top: 6rem;
+    padding-bottom: 2rem;
+  }
+  
+  .mobile-content-shift {
+    margin-top: 40vh;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+}
