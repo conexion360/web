@@ -1,0 +1,7 @@
+node_modules/
+.git/
+public/videos/
+src/imagenes/videos/
+*.mp4
+*.avi
+*.mov
