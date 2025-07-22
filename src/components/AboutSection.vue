@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 // No script needed for this component
 </script>
 
@@ -52,7 +52,7 @@
           <div class="absolute -inset-4 bg-gradient-to-r from-secondary/20 to-transparent rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
           <div class="relative overflow-hidden rounded-2xl">
             <img 
-              src="../imagenes/eventos/conexion_360.png" 
+              src="/imagenes/eventos/conexion_360.png" 
               alt="Equipo de trabajo en evento" 
               class="w-full h-auto object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-500"
             />

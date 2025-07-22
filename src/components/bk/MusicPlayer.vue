@@ -1,19 +1,19 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Howl } from 'howler';
 
 const playlist = [
   { 
     title: 'Corazón Serrano - Mix Poco Yo - Camino A Un Sueño',
-    file: new URL('../musicas/Corazón Serrano - Mix Poco Yo - Camino A Un Sueño.mp3', import.meta.url).href,
+    file: new URL('/musicas/Corazón Serrano - Mix Poco Yo - Camino A Un Sueño.mp3', import.meta.url).href,
   },
   { 
     title: 'La Bella Luz - Disjockey',
-    file: new URL('../musicas/La Bella Luz   Disjockey.mp3', import.meta.url).href,
+    file: new URL('/musicas/La Bella Luz   Disjockey.mp3', import.meta.url).href,
   },
   { 
     title: 'Caribeños De Guadalupe Ft. Josimar - Otra Vez Me Enamoré',
-    file: new URL('../musicas/Caribeños De Guadalupe Ft. Josimar - Otra Vez Me Enamoré.mp3', import.meta.url).href,
+    file: new URL('/musicas/Caribeños De Guadalupe Ft. Josimar - Otra Vez Me Enamoré.mp3', import.meta.url).href,
   }
 ];
 

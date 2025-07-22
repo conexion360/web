@@ -1,17 +1,17 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted } from 'vue';
 
 // Importar imágenes correctamente
-import viernes09 from '../imagenes/nuevos/viernes09.jpg';
-import sabado10 from '../imagenes/nuevos/sabado10.jpg';
-import domingo11 from '../imagenes/nuevos/domingo11.jpg';
+import viernes09 from '/imagenes/nuevos/viernes09.jpg';
+import sabado10 from '/imagenes/nuevos/sabado10.jpg';
+import domingo11 from '/imagenes/nuevos/domingo11.jpg';
 
-import viernes09Mayo from '../imagenes/eventos/viernes09_mayo.jpg';
-import sabado10Mayo from '../imagenes/eventos/sabado10_mayo.jpg';
-import domingo11Mayo from '../imagenes/eventos/domingo11_mayo.jpg';
-import amaranta11 from '../imagenes/eventos/amaranta11.jpg';
-import bellaluz09 from '../imagenes/eventos/bellaluz09.jpg';
-import corazonSerrano09 from '../imagenes/eventos/corazonserrano09.jpg';
+import viernes09Mayo from '/imagenes/eventos/viernes09_mayo.jpg';
+import sabado10Mayo from '/imagenes/eventos/sabado10_mayo.jpg';
+import domingo11Mayo from '/imagenes/eventos/domingo11_mayo.jpg';
+import amaranta11 from '/imagenes/eventos/amaranta11.jpg';
+import bellaluz09 from '/imagenes/eventos/bellaluz09.jpg';
+import corazonSerrano09 from '/imagenes/eventos/corazonserrano09.jpg';
 
 // Array de eventos con las imágenes importadas
 const events = [

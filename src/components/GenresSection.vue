@@ -1,27 +1,27 @@
-<script setup>
+﻿<script setup>
 const genres = [
   {
     id: 1,
     name: 'Rock',
-    image: new URL('../imagenes/eventos/genero_rock.jpg', import.meta.url).href,
+    image: new URL('/imagenes/eventos/genero_rock.jpg', import.meta.url).href,
     description: 'Conciertos y festivales de Rock'
   },
   {
     id: 2,
     name: 'Cumbia',
-    image: new URL('../imagenes/eventos/genero_cumbia.jpg', import.meta.url).href,
+    image: new URL('/imagenes/eventos/genero_cumbia.jpg', import.meta.url).href,
     description: 'Eventos y giras de Cumbia.'
   },
   {
     id: 3,
     name: 'Salsa',
-    image: new URL('../imagenes/eventos/genero_salsa.jpg', import.meta.url).href,
+    image: new URL('/imagenes/eventos/genero_salsa.jpg', import.meta.url).href,
     description: 'Salsa con los mejores.'
   },
   {
     id: 4,
     name: 'Folklore - Andino',
-    image: new URL('../imagenes/eventos/musica_andina.jpg', import.meta.url).href,
+    image: new URL('/imagenes/eventos/musica_andina.jpg', import.meta.url).href,
     description: 'Festivales de música tradicional peruana.'
   }
 ];

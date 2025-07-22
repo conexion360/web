@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref, onMounted, computed } from 'vue';
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { Autoplay, EffectFade } from 'swiper/modules';
@@ -25,32 +25,32 @@ function checkIsMobile() {
 const artists = [
   {
     id: 1,
-    image: new URL('../imagenes/cs.jpg', import.meta.url).href,
-    mobileBg: new URL('../imagenes/cs_mobile_bg.jpg', import.meta.url).href || '#001642',
+    image: new URL('/imagenes/cs.jpg', import.meta.url).href,
+    mobileBg: new URL('/imagenes/cs_mobile_bg.jpg', import.meta.url).href || '#001642',
     alt: 'Artista en concierto 1'
   },
   {
     id: 2,
-    image: new URL('../imagenes/bellaluz.jpg', import.meta.url).href,
-    mobileBg: new URL('../imagenes/mobile_bellaluz.jpg', import.meta.url).href || '#001642',
+    image: new URL('/imagenes/bellaluz.jpg', import.meta.url).href,
+    mobileBg: new URL('/imagenes/mobile_bellaluz.jpg', import.meta.url).href || '#001642',
     alt: 'Artista en concierto 2'
   },
   {
     id: 3,
-    image: new URL('../imagenes/mdc.jpg', import.meta.url).href,
-    mobileBg: new URL('../imagenes/mobile_mardecopas.jpg', import.meta.url).href || '#001642',
+    image: new URL('/imagenes/mdc.jpg', import.meta.url).href,
+    mobileBg: new URL('/imagenes/mobile_mardecopas.jpg', import.meta.url).href || '#001642',
     alt: 'Artista en concierto 3'
   },
   {
     id: 5,
-    image: new URL('../imagenes/karibenos.jpg', import.meta.url).href,
-    mobileBg: new URL('../imagenes/mobile_caribenos.jpg', import.meta.url).href || '#001642',
+    image: new URL('/imagenes/karibenos.jpg', import.meta.url).href,
+    mobileBg: new URL('/imagenes/mobile_caribenos.jpg', import.meta.url).href || '#001642',
     alt: 'Artista en concierto 5'
   },
   {
     id: 6,
-    image: new URL('../imagenes/bt.jpg', import.meta.url).href,
-    mobileBg: new URL('../imagenes/mobile_bt.jpg', import.meta.url).href || '#001642',
+    image: new URL('/imagenes/bt.jpg', import.meta.url).href,
+    mobileBg: new URL('/imagenes/mobile_bt.jpg', import.meta.url).href || '#001642',
     alt: 'Artista en concierto 6'
   }
 ];
@@ -117,7 +117,7 @@ const artists = [
         <!-- Logo (desktop only) -->
         <div v-if="!isMobile" class="mb-6 md:mb-8 text-center sm:text-left">
           <img 
-            src="../imagenes/conexion_logo.png" 
+            src="/imagenes/conexion_logo.png" 
             alt="Conexion360 Logo" 
             class="w-64 sm:w-80 md:w-[600px] h-auto mx-auto sm:mx-0 transform transition-all duration-1000 hover:scale-105"
           />

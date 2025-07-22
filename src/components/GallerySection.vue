@@ -1,8 +1,8 @@
-<script setup>
+﻿<script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 // Importar dinámicamente todas las imágenes .jpg de la carpeta galeria
-const imageModules = import.meta.glob('../imagenes/galeria/*.jpg', { eager: true });
+const imageModules = import.meta.glob('/imagenes/galeria/*.jpg', { eager: true });
 
 // Función para mezclar un array (algoritmo Fisher-Yates)
 const shuffleArray = (array) => {

@@ -1,4 +1,4 @@
-<script setup>
+﻿<script setup>
 import { ref } from 'vue';
 
 defineProps({
@@ -36,7 +36,7 @@ const navLinks = [
       <div class="flex justify-between items-center">
         <!-- Logo -->
         <div class="text-white font-bold text-xl md:text-2xl relative group">
-          <img src="../imagenes/conexion_logo.png" alt="Conexion360 Logo" class="h-12 w-auto" />
+          <img src="/imagenes/conexion_logo.png" alt="Conexion360 Logo" class="h-12 w-auto" />
         </div>
         
         <!-- Desktop Navigation -->
