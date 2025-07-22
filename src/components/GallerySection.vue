@@ -1,8 +1,9 @@
 ﻿<script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import '../stylegaleria.css'; // Importamos los estilos externos para la galería
 
 // Importar dinámicamente todas las imágenes .jpg de la carpeta galeria
-const imageModules = import.meta.glob('/imagenes/galeria/*.jpg', { eager: true });
+const imageModules = import.meta.glob('../imagenes/galeria/*.jpg', { eager: true });
 
 // Función para mezclar un array (algoritmo Fisher-Yates)
 const shuffleArray = (array) => {
@@ -22,7 +23,9 @@ let slides = Object.entries(imageModules).map(([path, module], index) => {
   return {
     id: index + 1,
     image: module.default || module,
-    name: fileName
+    name: fileName,
+    loaded: false,
+    error: false
   };
 });
 
@@ -31,9 +34,10 @@ slides = shuffleArray(slides);
 
 const currentIndex = ref(0);
 const activeSlide = ref(null);
-const activeSlideIndex = ref(0); // Añadido: Índice de la diapositiva actual en el modal
+const activeSlideIndex = ref(0); // Índice de la diapositiva actual en el modal
 const autoplayInterval = ref(null);
 const isTransitioning = ref(false);
+const isLoading = ref(true);
 
 // Filtra los índices de tarjetas visibles teniendo en cuenta que es un carrusel circular
 const visibleSlideIndices = computed(() => {
@@ -187,7 +191,23 @@ const stopAutoplay = () => {
   }
 };
 
+// Función para manejar eventos de carga de imágenes
+const handleImageLoad = (index) => {
+  slides[index].loaded = true;
+  slides[index].error = false;
+};
+
+// Función para manejar eventos de error de imágenes
+const handleImageError = (index) => {
+  slides[index].error = true;
+};
+
 onMounted(() => {
+  // Establecer isLoading a false después de un breve retraso
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 500);
+  
   // Log para depuración - comprobar cuántas imágenes se cargaron
   console.log(`Cargadas ${slides.length} imágenes de la galería en orden aleatorio`);
   
@@ -231,32 +251,78 @@ onMounted(() => {
   document.querySelectorAll('.reveal-on-scroll').forEach((el) => {
     observer.observe(el);
   });
+  
+  // Crear efecto de partículas flotantes
+  createParticles();
 });
 
 onUnmounted(() => {
   stopAutoplay();
 });
+
+// Función para crear partículas flotantes en el fondo
+const createParticles = () => {
+  const gallerySection = document.getElementById('gallery');
+  if (!gallerySection) return;
+  
+  const particleCount = 15;
+  
+  for (let i = 0; i < particleCount; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'gallery-particle';
+    
+    // Tamaño aleatorio
+    const size = Math.random() * 10 + 5;
+    particle.style.width = `${size}px`;
+    particle.style.height = `${size}px`;
+    
+    // Posición inicial aleatoria
+    const posX = Math.random() * 100;
+    const posY = Math.random() * 100;
+    particle.style.left = `${posX}%`;
+    particle.style.top = `${posY}%`;
+    
+    // Duración y retardo aleatorio
+    const duration = Math.random() * 30 + 20;
+    const delay = Math.random() * 10;
+    
+    // Aplicar animación
+    particle.style.animation = `float ${duration}s linear ${delay}s infinite`;
+    
+    // Agregar partícula al DOM
+    gallerySection.appendChild(particle);
+  }
+};
 </script>
 
 <template>
-  <section id="gallery" class="relative py-32 overflow-hidden" :style="{'min-height': '700px'}">
-    <!-- Fondo azul oscuro con detalles -->
-    <div class="absolute inset-0 bg-[#001642]">
-      <!-- Efectos de luz y patrones -->
-      <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(16,205,208,0.08),transparent_40%)]"></div>
-      <div class="absolute inset-0" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMC44IiBmaWxsPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDMpIiAvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIgLz48L3N2Zz4='); opacity: 0.3;"></div>
+  <section id="gallery" class="gallery-section">
+    <!-- Fondo con efectos -->
+    <div class="gallery-background">
+      <div class="gallery-gradient"></div>
+      <div class="gallery-pattern" style="background-image: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iMTAwIiBoZWlnaHQ9IjEwMCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgcGF0dGVyblRyYW5zZm9ybT0icm90YXRlKDQ1KSI+PGNpcmNsZSBjeD0iNTAiIGN5PSI1MCIgcj0iMC44IiBmaWxsPSJyZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDMpIiAvPjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSIgLz48L3N2Zz4=')"></div>
     </div>
     
     <div class="relative container mx-auto max-w-7xl px-4">
       <div class="text-center mb-16">
-        <h2 class="inline-block relative text-4xl font-bold mb-4 reveal-on-scroll">
-          <span class="text-white">Galería de</span>
-          <span class="text-secondary ml-2">Imágenes</span>
+        <h2 class="gallery-title reveal-on-scroll">
+          <span class="gallery-title-primary">Galería de</span>
+          <span class="gallery-title-secondary">Imágenes</span>
         </h2>
       </div>
       
-      <div v-if="slides.length === 0" class="text-center text-white py-8">
-        <p>No se encontraron imágenes en la galería.</p>
+      <!-- Estado de carga -->
+      <div v-if="isLoading" class="text-center text-white py-16">
+        <div class="loading-spinner mx-auto"></div>
+        <p class="mt-6 text-xl">Cargando galería...</p>
+      </div>
+      
+      <!-- Mensaje si no hay imágenes -->
+      <div v-else-if="slides.length === 0" class="text-center text-white py-16">
+        <svg class="w-20 h-20 mx-auto mb-6 text-secondary opacity-60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+        </svg>
+        <p class="text-xl mb-3">No se encontraron imágenes en la galería</p>
       </div>
       
       <!-- Carrusel 3D con imágenes cargadas dinámicamente -->
@@ -269,6 +335,7 @@ onUnmounted(() => {
           <button 
             class="carousel-nav-btn carousel-prev-btn"
             @click="prevSlide"
+            aria-label="Imagen anterior"
           >
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
@@ -278,6 +345,7 @@ onUnmounted(() => {
           <button 
             class="carousel-nav-btn carousel-next-btn"
             @click="nextSlide"
+            aria-label="Imagen siguiente"
           >
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -300,7 +368,17 @@ onUnmounted(() => {
                   :src="slide.image" 
                   :alt="slide.name" 
                   class="carousel-3d-image"
+                  @load="handleImageLoad(index)"
+                  @error="handleImageError(index)"
                 />
+                
+                <!-- Mensaje de error para imágenes que no cargan -->
+                <div v-if="slide.error" class="image-error-container">
+                  <svg class="image-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                  </svg>
+                  <span>Imagen no disponible</span>
+                </div>
                 
                 <!-- Efectos visuales en las tarjetas -->
                 <div class="carousel-3d-overlay"></div>
@@ -316,38 +394,41 @@ onUnmounted(() => {
     <!-- Modal para ver imagen ampliada -->
     <div 
       v-if="activeSlide" 
-      class="fixed inset-0 z-50 flex items-center justify-center p-4"
+      class="gallery-modal"
       @click="closeSlide"
     >
-      <div class="absolute inset-0 bg-black/90 backdrop-blur-md"></div>
+      <div class="gallery-modal-backdrop"></div>
       <div 
-        class="relative max-w-7xl w-full h-[90vh] animate-fade-in"
+        class="gallery-modal-content"
         @click.stop
       >
         <!-- Botón cerrar -->
         <button 
-          class="absolute top-4 right-4 text-white/70 hover:text-white z-10 p-3 rounded-full bg-black/30 backdrop-blur-sm transition-all duration-300 hover:bg-secondary/80"
+          class="gallery-modal-close"
           @click="closeSlide"
+          aria-label="Cerrar vista ampliada"
         >
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
         
-        <!-- Botón anterior (nueva flecha izquierda) -->
+        <!-- Botón anterior -->
         <button 
           class="modal-nav-btn modal-prev-btn"
           @click.stop="prevModalSlide"
+          aria-label="Imagen anterior"
         >
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
           </svg>
         </button>
         
-        <!-- Botón siguiente (nueva flecha derecha) -->
+        <!-- Botón siguiente -->
         <button 
           class="modal-nav-btn modal-next-btn"
           @click.stop="nextModalSlide"
+          aria-label="Imagen siguiente"
         >
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
@@ -355,12 +436,21 @@ onUnmounted(() => {
         </button>
         
         <!-- Contenido del modal -->
-        <div class="modal-content">
+        <div class="modal-image-container">
           <img 
             :src="activeSlide.image" 
             :alt="activeSlide.name" 
-            class="w-full h-full object-contain"
+            class="modal-image"
+            @error="activeSlide.error = true"
           />
+          
+          <!-- Mensaje de error para imágenes que no cargan en el modal -->
+          <div v-if="activeSlide.error" class="image-error-container">
+            <svg class="image-error-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+            </svg>
+            <span class="text-xl">Imagen no disponible</span>
+          </div>
         </div>
       </div>
     </div>
@@ -368,261 +458,19 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-.reveal-on-scroll {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.reveal-on-scroll.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Estilos del carrusel 3D */
-.carousel-3d-container {
-  position: relative;
-  height: 550px;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0 50px;
-}
-
-.carousel-3d-wrapper {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel-3d-stage {
-  position: relative;
-  width: 100%;
-  height: 85%;
-  perspective: 1200px;
-  transform-style: preserve-3d;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.carousel-3d-slide {
-  position: absolute;
-  width: 520px;
-  height: 370px;
-  transition: all 0.8s cubic-bezier(0.215, 0.610, 0.355, 1.000); /* Transición más suave */
-  cursor: pointer;
-  transform-style: preserve-3d;
-  backface-visibility: hidden;
-  left: 50%;
-  transform-origin: center center;
-  margin-left: -260px;
-}
-
-.carousel-3d-slide-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transform-style: preserve-3d;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 2px 10px rgba(0, 0, 0, 0.5);
-}
-
-.carousel-3d-image {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  z-index: 1;
-}
-
-/* Overlay con gradiente suave */
-.carousel-3d-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(to top, rgba(0,22,66,0.7), transparent);
-  z-index: 2;
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
-}
-
-/* Efecto de luz en la esquina */
-.light-effect {
-  position: absolute;
-  top: -50px;
-  right: -50px;
-  width: 150px;
-  height: 150px;
-  background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
-  z-index: 2;
-  opacity: 0.7;
-}
-
-/* Efecto de reflexión */
-.carousel-3d-reflection {
-  position: absolute;
-  bottom: -30px;
-  left: 0;
-  right: 0;
-  height: 30px;
-  background: linear-gradient(to bottom, rgba(255,255,255,0.15), transparent);
-  transform: rotateX(180deg);
-  filter: blur(5px);
-  opacity: 0.3;
-  z-index: 0;
-}
-
-/* Estilos de navegación del carrusel */
-.carousel-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 20;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.carousel-nav-btn:hover {
-  background-color: rgba(16, 205, 208, 0.9);
-  color: #001642;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.carousel-prev-btn {
-  left: 20px;
-}
-
-.carousel-next-btn {
-  right: 20px;
-}
-
-/* Estilos de navegación del modal */
-.modal-nav-btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  z-index: 10;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.modal-nav-btn:hover {
-  background-color: rgba(16, 205, 208, 0.9);
-  color: #001642;
-  transform: translateY(-50%) scale(1.1);
-}
-
-.modal-prev-btn {
-  left: 20px;
-}
-
-.modal-next-btn {
-  right: 20px;
-}
-
-/* Animación de entrada para el modal */
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
+/* Animación de partículas flotantes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) translateX(0);
   }
-  to {
-    opacity: 1;
-    transform: scale(1);
+  25% {
+    transform: translateY(-30px) translateX(15px);
   }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.3s ease-out forwards;
-}
-
-.modal-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-/* Responsividad */
-@media (max-width: 1200px) {
-  .carousel-3d-slide {
-    width: 480px;
-    height: 340px;
-    margin-left: -240px;
+  50% {
+    transform: translateY(-15px) translateX(30px);
   }
-  
-  .carousel-prev-btn, .modal-prev-btn {
-    left: 15px;
-  }
-  
-  .carousel-next-btn, .modal-next-btn {
-    right: 15px;
-  }
-  
-  .modal-nav-btn {
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@media (max-width: 768px) {
-  .carousel-3d-container {
-    height: 450px;
-  }
-  
-  .carousel-3d-slide {
-    width: 360px;
-    height: 260px;
-    margin-left: -180px;
-  }
-  
-  .carousel-nav-btn, .modal-nav-btn {
-    width: 50px;
-    height: 50px;
-  }
-}
-
-@media (max-width: 640px) {
-  .carousel-3d-slide {
-    width: 300px;
-    height: 220px;
-    margin-left: -150px;
-  }
-  
-  .carousel-nav-btn, .modal-nav-btn {
-    width: 40px;
-    height: 40px;
+  75% {
+    transform: translateY(-40px) translateX(-15px);
   }
 }
 </style>
